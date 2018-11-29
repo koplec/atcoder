@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
+//提出済みの解法
+/*
 func main() {
 	var num int
 	var diameters []int
@@ -26,6 +27,22 @@ func main() {
 	}
 
 	fmt.Printf("%d\n", count)
+}
+*/
+//別解
+//mapを使う方法
+func main() {
+	var num int
+	fmt.Scanf("%d", &num)
+
+	ma := map[int]bool{}
+
+	for i := 0; i < num; i++ {
+		var a int
+		fmt.Scan(&a)
+		ma[a] = true
+	}
+	fmt.Printf("%d\n", len(ma)) //len(ma)でmapの要素数を得られる　重複した値もmapだと消えてくれるので便利
 }
 
 /**
