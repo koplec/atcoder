@@ -1,8 +1,48 @@
 package main
 
 import "fmt"
+import "bufio"
+import "os"
+import "strconv"
 
+var reader = bufio.NewScanner(os.Stdin)
 func main(){
+    reader.Split(bufio.ScanWords)
+    reader.Scan()
+    n, _ := strconv.Atoi(reader.Text())
+
+    flag := true
+    t_0, x_0, y_0 := 0,0,0
+    for i:=0; i<n; i++{
+
+        reader.Scan()
+        t, _ := strconv.Atoi(reader.Text())
+        reader.Scan()
+        x, _ := strconv.Atoi(reader.Text())
+        reader.Scan()
+        y, _ := strconv.Atoi(reader.Text())
+
+        if flag {
+            d := absint(x - x_0) + absint(y - y_0)
+            dt := t - t_0
+            if d <= dt && (d - dt) % 2 == 0{
+                t_0, x_0, y_0 = t, x, y
+                continue
+            }else{
+                flag = false
+            }
+        }
+        
+    }
+    if flag {
+        fmt.Println("Yes")
+    }else{
+        fmt.Println("No")
+    }
+
+     
+    /* 最初の解答
+
     var num int
     fmt.Scanf("%d", &num)
 
@@ -10,7 +50,7 @@ func main(){
     x := make([]int, num+1)
     y := make([]int, num+1)
 
-   
+    
     for i:=1; i<=num; i++{
         nums := scanNums(3)
         t[i] = nums[0]
@@ -38,6 +78,7 @@ func main(){
     }
     fmt.Println("Yes")
     return
+*/
 }
 
 func absint(x int) int{
