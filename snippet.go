@@ -1,7 +1,56 @@
 package sort
 
-import "math"
+import (
+	"bufio"
+	"fmt"
+	"math"
+	"os"
+	"strings"
+)
 
+//** SCAN **
+
+var rdr = bufio.NewReaderSize(os.Stdin, 100000)
+
+/**
+ * 長い文字列はfmt.Scanfだと時間がかかる
+ */
+func readLine() (string, error) {
+	buf := make([]byte, 0, 100000)
+	for {
+		l, p, e := rdr.ReadLine()
+		if e != nil {
+			return "", e
+		}
+		buf = append(buf, l...)
+		if !p {
+			break
+		}
+	}
+	return string(buf), nil
+}
+
+/**
+ * 数字を読むとき
+ */
+var reader = bufio.NewScanner(os.Stdin)
+func readInt() int, error {
+    reader.Scan()
+    return strconv.Atoi(reader.Text())
+}
+
+//** DEBUG **/
+const DEBUG_ENABLE = false
+
+func debug(format string, a ...interface{}) (n int, err error) {
+	if DEBUG_ENABLE {
+		return fmt.Fprintf(os.Stdout, format, a...)
+	} else {
+		return 0, nil
+	}
+}
+
+//** sort **/
 func bubbleSort(a []int) {
 	flag := true //contains reversed elements
 	n := len(a)
@@ -60,7 +109,6 @@ func merge(a []int, p, q, r int) {
 	}
 }
 
-
 /**
  * １行に空白区切りで数字を読み込み
  */
@@ -72,71 +120,75 @@ func scanNums(len int) (nums []int) {
 	return
 }
 
-
-//readLine
-import "bufio"
-var rdr = bufio.NewReaderSize(os.Stdin, 100000)
-
-func readLine() (string, error) {
-    buf := make([]byte, 0, 100000)
-    for {
-        l, p, e := rdr.ReadLine()
-        if e!=nil {
-            return "", e
-        }
-        buf = append(buf, l...)
-        if !p {
-            break
-        }
-    }
-    return string(buf), nil
-}
-
+//** math **
+//階乗
 func fact(num int) int {
-    ret := 1
-    for i:=2; i<=num; i++{
-        ret *= i
-    }
-    return ret
+	ret := 1
+	for i := 2; i <= num; i++ {
+		ret *= i
+	}
+	return ret
 }
 
+//素因数分解
 func factoring(num int) map[int]int {
-    if num == 1 {
-        return make(map[int]int)
-    }
-    ret := make(map[int]int)
-    sqrt := int(math.Ceil(math.Sqrt(float64(num))))
-    for p:=2; p<=sqrt; p++ {
-        if num == 1 {
-            break
-        }
-        if isPrime(p) && num % p == 0{
-            _, ok := ret[p]
-            if ok {
-                ret[p] += 1
-            }else {
-                ret[p] = 1
-            }
-            num = num / p
-        }
-    }
-    return ret
+	debug("factoring %d BEGIN\n", num)
+	if num == 1 {
+		return make(map[int]int)
+	}
+	ret := make(map[int]int)
+	//sqrt := int(math.Ceil(math.Sqrt(float64(num))))
+	//debug("sqrt = %d\n", sqrt)
+	maxPrime := num
+	for num%2 == 0 {
+		ret[2]++
+		num = num / 2
+	}
+	for p := 3; p <= maxPrime; p = p + 1 {
+		debug("maxPrime is %d\n", maxPrime)
+		if num == 1 {
+			break
+		}
+		if isPrime(p) {
+			debug("%d is Prime\n", p)
+			debug("%d rem %d = %d\n", num, p, num%p)
+			for num%p == 0 {
+				debug(" counting of %d num\n", p)
+				_, ok := ret[p]
+				if ok {
+					ret[p]++
+				} else {
+					ret[p] = 1
+					debug("ret[%d] = %d\n", p, ret[p])
+				}
+				num = num / p
+			}
+		}
+	}
+	return ret
 }
 
+func printFactoring(factors map[int]int) string {
 
+	strs := make([]string, 0)
+	for k, v := range factors {
+		strs = append(strs, fmt.Sprintf("%d^%d", k, v))
+	}
+	return strings.Join(strs, " * ")
 
+}
 func isPrime(num int) bool {
-    if num == 2 {
-        return true
-    }
-    if num % 2 == 0{
-        return false
-    }
-    sqrt := math.Ceil(math.Sqrt(float64(num)))
-    for i:=3; i<=sqrt; i=i+2{
-        if num % i == 0 {
-            return false
-        }
-    }
-    return true
+	if num == 2 {
+		return true
+	}
+	if num%2 == 0 {
+		return false
+	}
+	sqrt := int(math.Ceil(math.Sqrt(float64(num))))
+	for i := 3; i <= sqrt; i = i + 2 {
+		if num%i == 0 {
+			return false
+		}
+	}
+	return true
 }
