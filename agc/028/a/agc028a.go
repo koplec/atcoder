@@ -64,39 +64,16 @@ func solve(n, m int, s, t string) int {
 }
 
 func greatestCommonDivider(n, m int) int {
-	nFactors := factoring(n)
-	mFactors := factoring(m)
-
-	factors := make(map[int]int)
-	for p, cn := range nFactors {
-		cm, ok := mFactors[p]
-		if ok {
-			factors[p] = minInt(cn, cm)
-		}
+	if m == 0 {
+		return n
+	} else {
+		return greatestCommonDivider(m, n%m)
 	}
-
-	ret := 1
-	for p, c := range factors {
-		ret *= powInt(p, c)
-	}
-	return ret
 }
 
 func leastCommonMultiple(n, m int) int {
-	nFactors := factoring(n)
-	mFactors := factoring(m)
-
-	for p, c := range nFactors {
-		nFactors[p] = maxInt(c, mFactors[p])
-	}
-	for p, c := range mFactors {
-		nFactors[p] = maxInt(c, nFactors[p])
-	}
-	ret := 1
-	for p, c := range nFactors {
-		ret *= powInt(p, c)
-	}
-	return ret
+	gcd := greatestCommonDivider(n, m)
+	return n * m / gcd
 }
 
 func powInt(a, n int) int {

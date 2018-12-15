@@ -123,40 +123,18 @@ func scanNums(len int) (nums []int) {
 //** math **
 //最大公約数
 func greatestCommonDivider(n, m int) int {
-	nFactors := factoring(n)
-	mFactors := factoring(m)
-
-	factors := make(map[int]int)
-	for p, cn := range nFactors {
-		cm, ok := mFactors[p]
-		if ok {
-			factors[p] = minInt(cn, cm)
-		}
+	if m == 0 {
+		return n
+	} else {
+		return greatestCommonDivider(m, n%m)
 	}
-
-	ret := 1
-	for p, c := range factors {
-		ret *= powInt(p, c)
-	}
-	return ret
 }
+
 
 //最小公倍数
 func leastCommonMultiple(n, m int) int {
-	nFactors := factoring(n)
-	mFactors := factoring(m)
-
-	for p, c := range nFactors {
-		nFactors[p] = maxInt(c, mFactors[p])
-	}
-	for p, c := range mFactors {
-		nFactors[p] = maxInt(c, nFactors[p])
-	}
-	ret := 1
-	for p, c := range nFactors {
-		ret *= powInt(p, c)
-	}
-	return ret
+	gcd := greatestCommonDivider(n, m)
+	return n * m / gcd
 }
 
 //累乗
