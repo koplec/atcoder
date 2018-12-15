@@ -236,3 +236,38 @@ func isPrime(num int) bool {
 	}
 	return true
 }
+
+
+
+//n!個のpermutationを作る コストは相当高い
+func genPermutation(n int) [][]int {
+	if n == 1 {
+		ret := make([][]int, 0)
+		ret = append(ret, []int{1})
+		return ret
+	} else {
+		permutations := genPermutation(n - 1)
+		ret := make([][]int, 0)
+		for _, p1 := range permutations {
+			for idx := 0; idx < n-1; idx++ {
+				tmpp1 := make([]int, len(p1))
+				copy(tmpp1, p1)
+				p2 := make([]int, 0)
+				p2 = append(p2, tmpp1[:idx]...)
+				p2 = append(p2, n)
+				p2 = append(p2, tmpp1[idx:]...)
+				ret = append(ret, p2)
+			}
+			tmpp1 := make([]int, len(p1))
+			copy(tmpp1, p1)
+			p2 := make([]int, 0)
+			p2 = append(p2, tmpp1...)
+			p2 = append(p2, n)
+
+			ret = append(ret, p2)
+		}
+
+		return ret
+	}
+}
+
