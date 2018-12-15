@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"sort"
 )
 
 func main() {
@@ -10,6 +11,7 @@ func main() {
 	var a []int
 	fmt.Scanf("%d", &num)
 	a = scanNums(num)
+	/* 自分の解法
 	mergeSort(a, 0, num-1)
 
 	alice := 0
@@ -19,6 +21,20 @@ func main() {
 		alice += a[i]
 		if i-1 >= 0 {
 			bob += a[i-1]
+		}
+	}
+	fmt.Printf("%d\n", alice-bob)
+	*/
+	//sort packageがあるとか知らなかった。。。
+	sort.Sort(sort.Reverse(sort.IntSlice(a)))
+
+	alice := 0
+	bob := 0
+	for i := 0; i < num; i++ {
+		if i%2 == 0 { //これはかしこい
+			alice += a[i]
+		} else {
+			bob += a[i]
 		}
 	}
 	fmt.Printf("%d\n", alice-bob)
