@@ -121,6 +121,74 @@ func scanNums(len int) (nums []int) {
 }
 
 //** math **
+//最大公約数
+func greatestCommonDivider(n, m int) int {
+	nFactors := factoring(n)
+	mFactors := factoring(m)
+
+	factors := make(map[int]int)
+	for p, cn := range nFactors {
+		cm, ok := mFactors[p]
+		if ok {
+			factors[p] = minInt(cn, cm)
+		}
+	}
+
+	ret := 1
+	for p, c := range factors {
+		ret *= powInt(p, c)
+	}
+	return ret
+}
+
+//最小公倍数
+func leastCommonMultiple(n, m int) int {
+	nFactors := factoring(n)
+	mFactors := factoring(m)
+
+	for p, c := range nFactors {
+		nFactors[p] = maxInt(c, mFactors[p])
+	}
+	for p, c := range mFactors {
+		nFactors[p] = maxInt(c, nFactors[p])
+	}
+	ret := 1
+	for p, c := range nFactors {
+		ret *= powInt(p, c)
+	}
+	return ret
+}
+
+//累乗
+func powInt(a, n int) int {
+	if n == 1 {
+		return a
+	}
+	if n %2 == 0 {
+		return powInt(a*a, n /2 )
+	}else{
+		return a * powInt(a, n - 1)
+	}
+}
+
+//最大
+func maxInt(a, b int) int {
+	if a > b {
+		return a
+	}else{
+		return b
+	}
+}
+
+//最小
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}
+
 //階乗
 func fact(num int) int {
 	ret := 1
@@ -132,7 +200,7 @@ func fact(num int) int {
 
 //素因数分解
 func factoring(num int) map[int]int {
-	debug("factoring %d BEGIN\n", num)
+	//debug("factoring %d BEGIN\n", num)
 	if num == 1 {
 		return make(map[int]int)
 	}
@@ -145,21 +213,21 @@ func factoring(num int) map[int]int {
 		num = num / 2
 	}
 	for p := 3; p <= maxPrime; p = p + 1 {
-		debug("maxPrime is %d\n", maxPrime)
+		//debug("maxPrime is %d\n", maxPrime)
 		if num == 1 {
 			break
 		}
 		if isPrime(p) {
-			debug("%d is Prime\n", p)
-			debug("%d rem %d = %d\n", num, p, num%p)
+			//debug("%d is Prime\n", p)
+			//debug("%d rem %d = %d\n", num, p, num%p)
 			for num%p == 0 {
-				debug(" counting of %d num\n", p)
+				//debug(" counting of %d num\n", p)
 				_, ok := ret[p]
 				if ok {
 					ret[p]++
 				} else {
 					ret[p] = 1
-					debug("ret[%d] = %d\n", p, ret[p])
+					//debug("ret[%d] = %d\n", p, ret[p])
 				}
 				num = num / p
 			}
@@ -169,13 +237,11 @@ func factoring(num int) map[int]int {
 }
 
 func printFactoring(factors map[int]int) string {
-
 	strs := make([]string, 0)
 	for k, v := range factors {
 		strs = append(strs, fmt.Sprintf("%d^%d", k, v))
 	}
 	return strings.Join(strs, " * ")
-
 }
 func isPrime(num int) bool {
 	if num == 2 {

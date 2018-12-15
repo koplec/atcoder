@@ -15,37 +15,71 @@ func main() {
 	fmt.Scan(&S, &T)
 	//S, _ := readLine() //len must N
 	//T, _ := readLine() //len must M
+	fmt.Printf("%d\n", solve(N, M, S, T))
 
-	//最小公倍数を求める
-	lcm := leastCommonMultiple(N, M)
-	debug("lcm = %d\n", lcm)
-	//最小公倍数の長さの単語の文字でN, Mの文字の位置が被るものがあるかチェック
-	dn := lcm / N
-	dm := lcm / M
-	debug("dn = %d dm=%d\n", dn, dm)
-	commons := make([]int, 0) //文字の位置が被っている位置
-	for i := 0; i < lcm; i = i + dn {
-		for j := 0; j < lcm; j = j + dm {
-			if i == j {
-				commons = append(commons, i)
-			}
-		}
+}
+
+func solve(n, m int, s, t string) int {
+	//先頭が等しくないならそもそもだめ
+	if s[0] != t[0] {
+		return -1
 	}
+	//最大公約数
+	gcd := greatestCommonDivider(n, n)
+	//最小公倍数を求める
+	lcm := leastCommonMultiple(n, m)
+	debug("lcm = %d gcm = %d\n", lcm, gcd)
+
+	//最大公約数が1なら互いに疎なので、先頭が等しければok
+	if gcd == 1 {
+		return lcm
+	}
+
+	//最小公倍数の約数の最小公倍数の倍数の部分が文字が被っている
+	//そこの文字が等しいかどうかをチェックする
+	dn := lcm / n
+	dm := lcm / m
+	lcm2 := leastCommonMultiple(dn, dm)
+	debug("lcm2=%d\n", lcm2)
+	commons := make([]int, 0) //文字の位置が被っている位置
+	idx := 1
+	for idx*lcm2 < lcm {
+		commons = append(commons, idx*lcm2)
+		idx++
+	}
+
 	debug("commons = %v\n", commons) //最大公約数の倍数
 	if len(commons) == 0 {           //被るものがない
-		fmt.Printf("%d\n", lcm)
-		return
+		return lcm
 	} else {
+		//文字列で被っているところチェック
 		for _, i := range commons {
-			debug("%d->%v %v\n", i, string(S[i/dn]), string(T[i/dm]))
-			if S[i/dn] != T[i/dm] {
-				fmt.Printf("-1\n")
-				return
+			debug("%d->%v %v\n", i, string(s[i/dn]), string(t[i/dm]))
+			if s[i/dn] != t[i/dm] {
+				return -1
 			}
 		}
-		fmt.Printf("%d\n", lcm)
+		return lcm
+	}
+}
+
+func greatestCommonDivider(n, m int) int {
+	nFactors := factoring(n)
+	mFactors := factoring(m)
+
+	factors := make(map[int]int)
+	for p, cn := range nFactors {
+		cm, ok := mFactors[p]
+		if ok {
+			factors[p] = minInt(cn, cm)
+		}
 	}
 
+	ret := 1
+	for p, c := range factors {
+		ret *= powInt(p, c)
+	}
+	return ret
 }
 
 func leastCommonMultiple(n, m int) int {
@@ -58,7 +92,6 @@ func leastCommonMultiple(n, m int) int {
 	for p, c := range mFactors {
 		nFactors[p] = maxInt(c, nFactors[p])
 	}
-	debug("factors -> %s\n", printFactoring(nFactors))
 	ret := 1
 	for p, c := range nFactors {
 		ret *= powInt(p, c)
@@ -77,6 +110,13 @@ func powInt(a, n int) int {
 	}
 }
 
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}
 func maxInt(a, b int) int {
 	if a > b {
 		return a
@@ -137,7 +177,7 @@ func scanNums(len int) (nums []int) {
 
 //素因数分解
 func factoring(num int) map[int]int {
-	debug("factoring %d BEGIN\n", num)
+	//debug("factoring %d BEGIN\n", num)
 	if num == 1 {
 		return make(map[int]int)
 	}
@@ -150,21 +190,21 @@ func factoring(num int) map[int]int {
 		num = num / 2
 	}
 	for p := 3; p <= maxPrime; p = p + 1 {
-		debug("maxPrime is %d\n", maxPrime)
+		//debug("maxPrime is %d\n", maxPrime)
 		if num == 1 {
 			break
 		}
 		if isPrime(p) {
-			debug("%d is Prime\n", p)
-			debug("%d rem %d = %d\n", num, p, num%p)
+			//debug("%d is Prime\n", p)
+			//debug("%d rem %d = %d\n", num, p, num%p)
 			for num%p == 0 {
-				debug(" counting of %d num\n", p)
+				//debug(" counting of %d num\n", p)
 				_, ok := ret[p]
 				if ok {
 					ret[p]++
 				} else {
 					ret[p] = 1
-					debug("ret[%d] = %d\n", p, ret[p])
+					//debug("ret[%d] = %d\n", p, ret[p])
 				}
 				num = num / p
 			}
