@@ -278,3 +278,11 @@ func isPow2(n int) bool {
 	t := math.Log2(float64(n))
 	return (1 << uint64(t)) == uint64(n)
 }
+
+func absInt(a int) int {
+	if a >= 0 {
+		return a
+	}else{
+		return -a;
+	}
+}
