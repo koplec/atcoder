@@ -7,6 +7,10 @@ import (
 
 func TestSolve(t *testing.T) {
 	_testSolve(t,
+		[]int{100, 0, 193},
+		[]int{99, 1, 191}, []int{100, 1, 192}, []int{99, 0, 192})
+
+	_testSolve(t,
 		[]int{2, 2, 6},
 		[]int{2, 3, 5}, []int{2, 1, 5}, []int{1, 2, 5}, []int{3, 2, 5})
 
@@ -15,8 +19,30 @@ func TestSolve(t *testing.T) {
 		[]int{0, 0, 100}, []int{1, 1, 98})
 
 	_testSolve(t,
-		[]int{100, 0, 193},
-		[]int{99, 1, 191}, []int{100, 1, 192}, []int{99, 0, 192})
+		[]int{0, 1, 11},
+		[]int{0, 0, 10}, []int{0, 2, 10}, []int{1, 1, 10})
+
+	_testSolve(t,
+		[]int{2, 2, 6},
+		[]int{2, 3, 5}, []int{2, 1, 5}, []int{1, 2, 5}, []int{3, 1, 4}, []int{3, 3, 4})
+
+	_testSolve(t,
+		[]int{2, 2, 6},
+		[]int{2, 3, 5}, []int{2, 1, 5}, []int{1, 2, 5}, []int{3, 1, 4}, []int{4, 3, 3})
+
+	_testSolve(t,
+		[]int{2, 2, 6},
+		[]int{2, 3, 5}, []int{2, 1, 5}, []int{1, 2, 5}, []int{3, 1, 4})
+
+	_testSolve(t,
+		[]int{3, 2, 7},
+		[]int{2, 3, 5}, []int{2, 1, 5}, []int{1, 2, 5}, []int{4, 1, 5})
+
+	_testSolve(t,
+		[]int{4, 1, 2},
+		[]int{2, 0, 0}, []int{3, 0, 0}, []int{4, 0, 1}, []int{5, 0, 0}, []int{6, 0, 0},
+		[]int{2, 1, 0}, []int{3, 1, 1}, []int{5, 1, 1}, []int{6, 1, 0}, []int{7, 1, 0},
+		[]int{2, 2, 0}, []int{3, 2, 0}, []int{4, 2, 1}, []int{5, 2, 0}, []int{6, 2, 0})
 
 }
 
