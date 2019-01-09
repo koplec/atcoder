@@ -130,6 +130,24 @@ func greatestCommonDivider(n, m int) int {
 	}
 }
 
+/**
+ * nで与えられた数字の全約数
+ */
+func allDivider(n int) []int{
+	ret := make([]int, 0)
+	ret = append(ret, 1)
+	ret = append(ret, n)
+
+	sqrt := int(math.Ceil(math.Sqrt(float64(n))))
+	for d := 2; d <= sqrt; d++ {
+		if n%d == 0 {
+			ret = append(ret, d)
+			ret = append(ret, n/d)
+		}
+	}
+	return ret
+}
+
 
 //最小公倍数
 func leastCommonMultiple(n, m int) int {
