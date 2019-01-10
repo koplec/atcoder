@@ -23,13 +23,13 @@ func TestSolve(t *testing.T) {
 	check(t, []int{1, 2, 2, 1, 2, 3}, 3)
 	check(t, []int{1e+05, 1e+05, 1e+05, 1e+05, 1e+05, 1e+05}, 3)
 	//長いもの
-	/*
-		a := []int{}
-		for i := 0; i < 1e+05; i++ {
-			a = append(a, i)
-		}
-		check(t, a, 1e+05-2)
-	*/
+
+	a := []int{}
+	for i := 0; i < 1e+05; i++ {
+		a = append(a, i)
+	}
+	check(t, a, 1e+05-2)
+
 }
 
 func check(t *testing.T, v []int, ans int) {
