@@ -16,10 +16,13 @@ func main() {
 }
 
 func solve(X, Y int, xslice, yslice []int) string {
-	_, xmax := searchMinMax(xslice)
-	ymin, _ := searchMinMax(yslice)
+	xmin, xmax := searchMinMax(xslice)
+	ymin, ymax := searchMinMax(yslice)
 
-	if !(xmax <= ymin) {
+	if xmin <= ymin && ymin <= xmax {
+		return "War"
+	}
+	if ymin <= xmin && xmin <= ymax {
 		return "War"
 	}
 
