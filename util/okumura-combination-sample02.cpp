@@ -51,6 +51,8 @@ vector<unsigned int> comb2vec(unsigned int c){
     }
     return ret;
 }
+
+
 void print_combvec(vector<unsigned int> cvec){
     cout << "[ ";
     for(std::size_t i =0; i<cvec.size(); i++){
@@ -59,7 +61,7 @@ void print_combvec(vector<unsigned int> cvec){
     cout << " ] " << endl;
 }
 
-void foreach_comb(int n, int k){
+void foreach_comb(int n, int k, std::function<void(vector<unsigned int>)> fn){
     unsigned int first_c = firstcomb(k);
     unsigned int full_one = firstcomb(n);
 
@@ -68,7 +70,7 @@ void foreach_comb(int n, int k){
     while(! (c& ~full_one)){
         //処理
         c_vec = comb2vec(c);
-        print_combvec(c_vec);
+        fn(c_vec);
 
         //次の値
         c = nextcomb(c);
@@ -77,6 +79,16 @@ void foreach_comb(int n, int k){
 
 int main(int argc, char const *argv[])
 {
-    foreach_comb(3, 2);
+    // 関数を定義して、呼び出し
+    // foreach_comb(3, 2, print_combvec);
+
+    // 匿名関数
+    foreach_comb(3, 2, [=](vector<unsigned int> cvec){
+         cout << "[ ";
+        for(std::size_t i =0; i<cvec.size(); i++){
+            cout << cvec.at(i) << " ";
+        }
+        cout << " ] " << endl;
+    });
     return 0;
 }
