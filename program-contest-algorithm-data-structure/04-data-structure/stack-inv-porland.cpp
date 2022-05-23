@@ -72,8 +72,8 @@ int main(int argc, char const *argv[])
             continue;
         }
         if(str == "-"){
-            int a = stack.pop();
             int b = stack.pop();
+            int a = stack.pop();
             int ret = a - b;
             stack.push(ret);
             continue;
