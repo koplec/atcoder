@@ -7,8 +7,6 @@ using namespace std;
 /**
  * okumura-combination-sampleを元にして、
  * 与えられた配列サイズからcombinationの全ての組み合わせをループする物を作る
- * 
- * 
  */ 
 
 unsigned int nextcomb(unsigned int x){
@@ -26,15 +24,10 @@ unsigned int firstcomb(int k){
 }
 
 /**
- * @brief　
- * 
- * @param c 
- * @return int* 
  */
 vector<unsigned int> comb2vec(unsigned int c){
     vector<unsigned int> ret;
-    unsigned int r = c / 2;
-    unsigned int m = c % 2;
+    unsigned int r = c / 2, m = c % 2;
     unsigned int index = 0;
     while(r > 0){
         if(m != 0){
@@ -53,20 +46,12 @@ vector<unsigned int> comb2vec(unsigned int c){
 }
 
 
-void print_combvec(vector<unsigned int> cvec){
-    cout << "[ ";
-    for(std::size_t i =0; i<cvec.size(); i++){
-        cout << cvec.at(i) << " ";
-    }
-    cout << " ] " << endl;
-}
-
 void foreach_comb(int n, int k, std::function<void(vector<unsigned int>)> fn){
     unsigned int first_c = firstcomb(k);
     unsigned int full_one = firstcomb(n);
 
     unsigned int c = first_c;
-    vector<unsigned int> c_vec = comb2vec(c);
+    std::vector<unsigned int> c_vec = comb2vec(c);
     while(! (c& ~full_one)){
         //処理
         c_vec = comb2vec(c);
@@ -76,6 +61,18 @@ void foreach_comb(int n, int k, std::function<void(vector<unsigned int>)> fn){
         c = nextcomb(c);
     }
 }
+
+
+//ここより上は色々使えそう
+
+void print_combvec(vector<unsigned int> cvec){
+    cout << "[ ";
+    for(std::size_t i =0; i<cvec.size(); i++){
+        cout << cvec.at(i) << " ";
+    }
+    cout << " ] " << endl;
+}
+
 
 int main(int argc, char const *argv[])
 {
