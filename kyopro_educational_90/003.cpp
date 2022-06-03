@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include <map>
+#include <set>
 
 using namespace std;
 
@@ -19,9 +21,31 @@ int main(){
     int N;
     cin >> N;
 
+    map<int, set<int>> neighbors;
+
+    int a, b;
+    for(int i=1; i<=N-1; i++){
+        cin >> a >> b;
+        
+        if(neighbors.count(a)){
+            neighbors[a].insert(b);
+        }else{
+            set<int> nexts;
+            nexts.insert(b);
+            neighbors[a] = nexts;
+        }
+        
+        if(neighbors.count(b)){
+            neighbors[b].insert(a);
+        }else{
+            set<int> nexts;
+            nexts.insert(a);
+            neighbors[b] = nexts;
+        }
+    }
+
     vector<vector<int>> D(N+1, vector<int>(N+1));
     vector<vector<bool>> CHECK(N+1, vector<bool>(N+1));
-
     for(int i=1; i<=N; i++){
         for(int j=1; j<=N; j++){
             D[i][j] = -1;
@@ -29,15 +53,13 @@ int main(){
         }    
     }
 
-    int a, b;
-    for(int i=1; i<=N-1; i++){
-        cin >> a >> b;
-        D[a][b] = 1;
-        D[b][a] = 1;
-    }
 
     for(int i=1; i<=N; i++){
         //つながっているところを探す
+        set<int> nexts = neighbors[i];
+        for(const int &next : nexts){
+            
+        }
         for(int j=1; j<=N; j++){
             if(i == j) continue;
             assert(i != j);
