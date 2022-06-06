@@ -8,6 +8,8 @@ using namespace std;
 
 
 void printD(vector<vector<int>> D){
+    cout << "D size:" << D.size() << endl;
+    cout << "-------" << endl;
     for(int i=1; i<D.size(); i++){
         vector<int> a = D[i];
         for(int j=1; j<a.size(); j++){
@@ -15,6 +17,29 @@ void printD(vector<vector<int>> D){
         }
         cout << "\n";
     }
+}
+
+map<int, int> measure(int start, map<int, set<int>> neighbors, set<int> passed){
+    set<int> nexts = neighbors[start];
+    map<int, int> ret;
+    ret[start] = 0;
+    passed.insert(start);
+    for(int next : nexts ){
+        if(passed.count(next)) continue;
+        map<int, int> nextRet = measure(next, neighbors, passed);
+        for(auto it : nextRet){
+            int point = it.first;
+            int d = it.second + 1;
+            if(ret.count(point)){
+                if(ret[point] < d){
+                    ret[point] = d;
+                }
+            }else{
+                ret[point] = d;
+            }
+        }
+    }
+    return ret;
 }
 
 int main(){
@@ -53,27 +78,30 @@ int main(){
         }    
     }
 
-
-    for(int i=1; i<=N; i++){
-        //つながっているところを探す
-        set<int> nexts = neighbors[i];
-        for(const int &next : nexts){
-            
+    //つながっているところを探す
+    for(int start=1; start<=N; start++){
+        set<int> passed;
+        map<int, int> ret = measure(start, neighbors, passed);
+        for(auto it : ret){
+            int point = it.first;
+            int d = it.second;
+            D[start][point] = d;
         }
+    }
+    // printD(D);
+
+    //どこをつなげばいいかを考える
+    int imax, jmax;
+    int max = -1;
+    for(int i=1; i<=N; i++){
         for(int j=1; j<=N; j++){
-            if(i == j) continue;
-            assert(i != j);
-            if(D[i][j] == 1){
-                for(int k=1; k<=N; k++){
-                    if(j == k || k == i) continue;
-                    if(D[j][k] == 1){
-                        D[i][k] = D[i][j] + D[j][k];
-                    }
-                }
+            if(D[i][j] > max){
+                imax = i;
+                jmax = j;
+                max = D[i][j];
             }
         }
     }
-    printD(D);
-
+    cout << max + 1 << endl;
     return 0;
 }
