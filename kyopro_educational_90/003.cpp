@@ -69,14 +69,12 @@ int main(){
         }
     }
 
-    vector<vector<int>> D(N+1, vector<int>(N+1));
-    vector<vector<bool>> CHECK(N+1, vector<bool>(N+1));
-    for(int i=1; i<=N; i++){
-        for(int j=1; j<=N; j++){
-            D[i][j] = -1;
-            CHECK[i][j] = false;
-        }    
-    }
+    // vector<vector<int>> D(N+1, vector<int>(N+1));
+    // for(int i=1; i<=N; i++){
+    //     for(int j=1; j<=N; j++){
+    //         D[i][j] = -1;
+    //     }    
+    // }
 
     //つながっているところを探す
     int max = -1;
@@ -86,7 +84,7 @@ int main(){
         for(auto it : ret){
             int point = it.first;
             int d = it.second;
-            D[start][point] = d;
+            // D[start][point] = d;
             if(max < d){
                 max = d;
             }
