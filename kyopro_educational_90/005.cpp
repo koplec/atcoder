@@ -32,6 +32,28 @@ vector<ll> genNum(vector<int> c, int N){
     return ret;
 }
 
+int countFilter(vector<int> c, int N, int B){
+    int count = 0;
+    if(N==1){
+        for(int i=0; i<c.size(); i++){
+            if(c.at(i) % B == 0){
+                count++;
+            }
+        }
+        return count;
+    }
+    vector<ll> ret1 = genNum(c, N-1);
+    for(auto num : ret1){
+        for(int i=0; i<c.size(); i++){
+            ll a = num*10+ c.at(i);
+            if(a % B == 0){
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
 int main(int argc, char const *argv[])
 {
     //N桁の数のうちBの倍数はいくつか
@@ -54,12 +76,13 @@ int main(int argc, char const *argv[])
     //1. N桁の数を生成
     //2. Bで割れるか試して、カウント
     //3. 答を10^9+7でわって余りを出す 
-    int count = 0;
-    vector<ll> nums = genNum(c, N);
-    for(auto l : nums){
-        // cout << l << endl;
-        if(l % B == 0) count++;
-    }
+    // int count = 0;
+    // vector<ll> nums = genNum(c, N);
+    // for(auto l : nums){
+    //     // cout << l << endl;
+    //     if(l % B == 0) count++;
+    // }
+    int count = countFilter(c, N, B);
     cout << count % 1000000008 << endl;
     return 0;
 }
