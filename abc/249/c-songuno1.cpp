@@ -51,10 +51,20 @@ void copyTest(counter C){
     printf("%d -> %d\n", prev, after);
 }
 int main(){
-    counter C; 
-    C.c[3] = 10;
-    printf("A main C.c[3]=%d\n", C.c[3]);
-    copyTest(C);
-    printf("B main C.c[3]=%d\n", C.c[3]);
+    int i;
+ 
+	scanf("%d%d", &N, &M);
+	for (i = 0; i < N; i++) scanf("%s", d[i]);
+ 
+	dfs(0, Bnk);
+ 
+	printf("%d", Ans);
+ 
+	// return 0;
+    // counter C; 
+    // C.c[3] = 10;
+    // printf("A main C.c[3]=%d\n", C.c[3]);
+    // copyTest(C);
+    // printf("B main C.c[3]=%d\n", C.c[3]);
     
 }
