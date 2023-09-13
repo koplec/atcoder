@@ -1,7 +1,8 @@
 import { assert } from "console";
 import * as fs from "fs";
 
-const DEBUG = true;
+const DEBUG = false;
+const DO_MAIN = false;
 if (!DEBUG) {
   console.debug = () => {};
 }
@@ -26,7 +27,7 @@ function readInputs(): string[] {
  *
  * @returns 何番目の番号が薬の効果が効率的か 0空採番される
  */
-function calcEffectivePointIndex(
+export function calcEffectivePointIndex(
   N: number,
   H: number,
   X: number,
@@ -62,4 +63,4 @@ function main() {
   }
 }
 
-main();
+if (DO_MAIN) main();
