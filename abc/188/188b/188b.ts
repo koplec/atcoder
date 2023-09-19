@@ -33,7 +33,7 @@ export function* zip<T>(...args: Array<T>[]) {
 }
 
 export function prod(a: number[], b: number[]): number {
-  let ret = 0.0;
+  let ret = 0;
   for (let [elm1, elm2] of zip<number>(a, b)) {
     ret += elm1 * elm2;
   }
@@ -46,4 +46,9 @@ if (DO_MAIN) {
   const ary2: number[] = lines[2].split(" ").map((a) => Number(a));
 
   const p = prod(ary1, ary2);
+  if (p === 0) {
+    console.log("Yes");
+  } else {
+    console.log("No");
+  }
 }
