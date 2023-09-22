@@ -2,7 +2,7 @@ import { assert } from "console";
 import * as fs from "fs";
 
 const DEBUG = false;
-const DO_MAIN = false;
+const DO_MAIN = true;
 if (!DEBUG) {
   console.debug = () => {};
 }
@@ -49,19 +49,13 @@ if (DO_MAIN) {
 
   let mountains: Mountain[] = [];
   for (const line of lines) {
+    console.debug(line);
+    if (line.length == 0) continue;
+    const ary = line.split(" ");
     let obj: Mountain = {
-      name: line.split(" ")[0],
-      height: Number(line.split(" ")[1]),
+      name: ary[0],
+      height: Number(ary[1]),
     };
-    //ここの実装をもう少しスマートにしたい
-    obj = line.split(" ").reduce((prev, curr, currIndex) => {
-      if (currIndex === 0) {
-        prev.name = curr;
-      } else {
-        prev.height = Number(curr);
-      }
-      return;
-    }, Object());
     mountains.push(obj);
   }
 
