@@ -32,7 +32,11 @@ function* zip<T>(...args: Array<T>[]) {
   }
 }
 
-export type Mountain = { name: string; height: number };
+export interface Mountain {
+  name: string;
+  height: number;
+}
+
 export function secondHighestMountain(mountains: Mountain[]): Mountain {
   let a = mountains.sort((a, b) => {
     return b.height - a.height;
@@ -45,10 +49,19 @@ if (DO_MAIN) {
 
   let mountains: Mountain[] = [];
   for (const line of lines) {
-    const obj: Mountain = {
+    let obj: Mountain = {
       name: line.split(" ")[0],
       height: Number(line.split(" ")[1]),
     };
+    //ここの実装をもう少しスマートにしたい
+    obj = line.split(" ").reduce((prev, curr, currIndex) => {
+      if (currIndex === 0) {
+        prev.name = curr;
+      } else {
+        prev.height = Number(curr);
+      }
+      return;
+    }, Object());
     mountains.push(obj);
   }
 
