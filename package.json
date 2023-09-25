@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test":"jest"
+  },
   "devDependencies": {
     "@types/node": "^20.6.0",
     "typescript": "^5.2.2",

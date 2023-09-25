@@ -11,9 +11,9 @@ function findOnlyOne(a, b, c) {
 }
 
 function main() {
-  let input = require("fs").readFileSync("/dev/stdin", "utf8");
+  const input = require("fs").readFileSync("/dev/stdin", "utf8");
   console.debug(input);
-  let nums = input.split(" ").map((str) => Number(str));
+  const nums = input.split(" ").map((str) => Number(str));
   console.debug(nums);
   const ans = findOnlyOne(...nums);
   process.stdout.write(String(ans));
