@@ -1,6 +1,6 @@
 import { test, describe, expect } from "@jest/globals";
 
-import { canSeeMasu, compareMasuPoint, genMasuMap } from "./197b";
+import { Masu, canSeeMasu, compareMasuPoint, genMasuMap } from "./197b";
 
 describe("array equality check", () => {
   test("number[][]", () => {
@@ -52,7 +52,7 @@ describe("197b 2block", () => {
     ).toStrictEqual(
       [
         { x: 0, y: 0 },
-        { x: 1, y: 0 },
+        { x: 0, y: 1 },
       ].sort(compareMasuPoint)
     );
   });
@@ -66,7 +66,7 @@ describe("197b 2block", () => {
     ).toStrictEqual(
       [
         { x: 0, y: 0 },
-        { x: 0, y: 1 },
+        { x: 1, y: 0 },
       ].sort(compareMasuPoint)
     );
   });
@@ -80,8 +80,8 @@ describe("197b 2block", () => {
     expect(expected).toEqual(
       [
         { x: 0, y: 0 },
-        { x: 1, y: 0 },
         { x: 0, y: 1 },
+        { x: 1, y: 0 },
       ].sort(compareMasuPoint)
     );
   });
@@ -117,14 +117,14 @@ describe("197b 2block", () => {
   });
 
   test("left", () => {
-    let expected = canSeeMasu(1, 0, [
+    let expected = canSeeMasu(0, 1, [
       [0, 0],
       [1, 1],
     ]);
     expect(expected.sort(compareMasuPoint)).toStrictEqual(
       [
         { x: 0, y: 0 },
-        { x: 1, y: 0 },
+        { x: 0, y: 1 },
       ].sort(compareMasuPoint)
     );
   });
@@ -173,8 +173,41 @@ describe("given sample", () => {
       [0, 0, 0, 0, 1],
     ]);
 
+    const expectedMasu = new Masu(expectedMasuMap);
+    expect(expectedMasu.height()).toBe(3);
+    expect(expectedMasu.width()).toBe(5);
+    expect(expectedMasu.value(0, 0)).toBe(1);
+    expect(expectedMasu.value(0, 1)).toBe(0);
+    expect(expectedMasu.value(0, 2)).toBe(0);
+    expect(expectedMasu.value(0, 3)).toBe(0);
+    expect(expectedMasu.value(0, 4)).toBe(0);
+    expect(expectedMasu.value(1, 0)).toBe(1);
+    expect(expectedMasu.value(1, 1)).toBe(1);
+    expect(expectedMasu.value(1, 2)).toBe(1);
+    expect(expectedMasu.value(1, 3)).toBe(1);
+    expect(expectedMasu.value(1, 4)).toBe(1);
+
     //0,3で呼び出したい
-    const expectedCanSeeMasu = canSeeMasu(3, 0, expectedMasuMap);
+    let expectedCanSeeMasu = canSeeMasu(1 - 1, 4 - 1, expectedMasuMap);
     expect(expectedCanSeeMasu.length).toBe(4);
+  });
+
+  test("sample03", () => {
+    const lines = `.#..#
+#.###
+##...
+#..#.
+#.###`.split("\n");
+    const expectedMasuMap = genMasuMap(5, 5, lines);
+    expect(expectedMasuMap).toStrictEqual([
+      [0, 1, 0, 0, 1],
+      [1, 0, 1, 1, 1],
+      [1, 1, 0, 0, 0],
+      [1, 0, 0, 1, 0],
+      [1, 0, 1, 1, 1],
+    ]);
+
+    let expectedCanSeeMasu = canSeeMasu(4 - 1, 2 - 1, expectedMasuMap);
+    expect(expectedCanSeeMasu.length).toBe(3);
   });
 });

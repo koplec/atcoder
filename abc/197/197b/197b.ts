@@ -1,8 +1,8 @@
 import { assert } from "console";
 import * as fs from "fs";
 
-const DEBUG = true;
-const DO_MAIN = false;
+const DEBUG = false;
+const DO_MAIN = true;
 if (!DEBUG) {
   console.debug = () => {};
 }
@@ -32,8 +32,10 @@ function* zip<T>(...args: Array<T>[]) {
   }
 }
 
+type MasuMap = number[][];
+
 export class Masu {
-  constructor(private _map: number[][]) {
+  constructor(private _map: MasuMap) {
     this._map = _map;
   }
 
@@ -41,11 +43,11 @@ export class Masu {
    * 障害物か否か
    * 障害物だったら1, 層じゃないときは0
    *
-   * @param x 横方向座標
-   * @param y 縦方向座標
+   * @param x 縦方向座標
+   * @param y 横方向座標
    */
   value(x: number, y: number): number {
-    return this._map[y][x];
+    return this._map[x][y];
   }
   width(): number {
     return this._map[0]!.length;
@@ -65,8 +67,14 @@ export const compareMasuPoint = function (a: MasuPoint, b: MasuPoint): number {
   return 0;
 };
 
-type MasuMap = number[][];
-
+/**
+ * 上からx行目、左からy列目のマスから見渡すことができるマスの配列
+ *
+ * @param x 上から何段目
+ * @param y 左から何列目
+ * @param masuMap
+ * @returns
+ */
 export function canSeeMasu(
   x: number,
   y: number,
@@ -74,38 +82,38 @@ export function canSeeMasu(
 ): MasuPoint[] {
   const masu = new Masu(masuMap);
   console.debug("canSeeMasu masu:", masuMap);
-  //結果のマスを[[1,2], [3,4]]のように入れていく
+  //結果のマスを[{x:1, y:2}, {x:3, y:4}]のように入れていく
   const ret: MasuPoint[] = new Array();
   const h = masu.height();
   const w = masu.width();
   console.debug("h:", h);
   console.debug("w:", w);
   ret.push({ x: x, y: y });
+
   //right
+  //
   console.debug("right");
-  for (let i = x + 1; i < w && i >= 0; i++) {
-    if (masu.value(i, y) === 1) break;
-    ret.push({ x: i, y: y });
+  for (let j = y + 1; j < w && j >= 0; j++) {
+    if (masu.value(x, j) === 1) break;
+    ret.push({ x: x, y: j });
   }
   //left
   console.debug("left");
-  for (let i = x - 1; i < w && i >= 0; i--) {
+  for (let j = y - 1; j < w && j >= 0; j--) {
+    if (masu.value(x, j) === 1) break;
+    ret.push({ x: x, y: j });
+  }
+
+  //down
+  for (let i = x + 1; i < h && i >= 0; i++) {
     if (masu.value(i, y) === 1) break;
     ret.push({ x: i, y: y });
   }
 
-  //down
-  for (let j = y + 1; j < h && j >= 0; j++) {
-    console.debug(`(i, j)=(${j}, ${x})`);
-    if (masu.value(x, j) === 1) break;
-    ret.push({ x: x, y: j });
-  }
-
   //up
-  for (let j = y - 1; j < h && j >= 0; j--) {
-    console.debug(`(i, j)=(${j}, ${x})`);
-    if (masu.value(x, j) === 1) break;
-    ret.push({ x: x, y: j });
+  for (let i = x - 1; i < h && i >= 0; i--) {
+    if (masu.value(i, y) === 1) break;
+    ret.push({ x: i, y: y });
   }
 
   console.debug("canSeeMasu:", ret);
@@ -150,7 +158,14 @@ export function genMasuMap(H: number, W: number, lines: string[]): MasuMap {
 
 if (DO_MAIN) {
   const [line0, ...lines] = readInputs();
+  /**
+   * H: 縦H行
+   * W: 横W行
+   * X：上からX番目
+   * Y: 左からY番目
+   */
   const [H, W, X, Y] = line0.split(" ").map(Number);
-
   const masuMap = genMasuMap(H, W, lines);
+  const masu = canSeeMasu(X - 1, Y - 1, masuMap);
+  console.log(masu.length);
 }
