@@ -13,5 +13,6 @@
         "editor.formatOnSave": true,
         "editor.wordBasedSuggestions": false,
         "editor.defaultFormatter": "ms-python.vscode-pylance"
-    }
+    },
+    "jest.autoRun": null
 }
