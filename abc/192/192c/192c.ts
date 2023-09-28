@@ -32,6 +32,11 @@ export function* zip<T>(...args: Array<T>[]) {
   }
 }
 
+export function randomInt(max: number): number {
+  const r = Math.random() * max;
+  return Math.trunc(r);
+}
+
 function _g(x: number, compareTo: (x: number, y: number) => number): number {
   let str = String(x);
   str = str
@@ -76,3 +81,14 @@ if (DO_MAIN) {
   const val = a(N, K);
   console.log(val);
 }
+
+// for (let i = 0; i < 100; i++) {
+//   let N = randomInt(1000000000);
+//   let K = randomInt(100000);
+//   console.log("N=", N, " K=", K);
+//   let expected = a(N, K);
+//   if (expected !== f(a(N, K - 1))) {
+//     console.log("FAILED!!");
+//     process.exit(1);
+//   }
+// }

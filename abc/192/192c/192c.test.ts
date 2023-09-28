@@ -1,5 +1,5 @@
 import { describe, test, expect } from "@jest/globals";
-import { g1, g2, f, a } from "./192c";
+import { g1, g2, f, a, randomInt } from "./192c";
 
 describe("g1", () => {
   test("g1", () => {
@@ -40,5 +40,16 @@ describe("g1", () => {
 
   test("sample03", () => {
     expect(a(6174, 100000)).toBe(6174);
+  });
+
+  test("try some", () => {
+    expect(a(1000000000, 100000)).toBe(f(a(1000000000, 100000 - 1)));
+  });
+
+  test("try random", () => {
+    let N = 6;
+    let K = randomInt(100000);
+    console.log("N=", N, " K=", K);
+    expect(a(N, K)).toBe(f(a(N, K - 1)));
   });
 });
