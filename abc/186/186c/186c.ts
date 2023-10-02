@@ -44,13 +44,12 @@ export function randomInt(max: number): number {
  * @param n
  */
 export function octalNum(n: number): string {
-  if (n === 0) return "0";
   let ret = [];
-  while (n > 0) {
+  do {
     let rem = n % 8;
     n = (n - rem) / 8;
     ret.push(rem);
-  }
+  } while (n > 0);
   ret = ret.reverse();
   return ret.join("");
 }
