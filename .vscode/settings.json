@@ -12,7 +12,8 @@
         "diffEditor.ignoreTrimWhitespace": false,
         "editor.formatOnSave": true,
         "editor.wordBasedSuggestions": false,
-        "editor.defaultFormatter": "ms-python.vscode-pylance"
+        "editor.defaultFormatter": "ms-python.autopep8"
     },
-    "jest.autoRun": null
+    "jest.autoRun": null,
+    "python.formatting.provider": "none"
 }
