@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { off } from "process";
 
 const DEBUG = false;
-const DO_MAIN = false;
+const DO_MAIN = true;
 if (!DEBUG) {
   console.debug = () => {};
 }
@@ -92,4 +92,11 @@ export function countNot7Letter(maxNum: number): number {
     count++;
   }
   return count;
+}
+
+if (DO_MAIN) {
+  const [line0, ...other] = readInputs();
+  const maxNum = Number(line0);
+  const ans = countNot7Letter(maxNum);
+  console.log(ans);
 }
