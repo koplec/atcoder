@@ -2,6 +2,7 @@ import { assert } from "console";
 import * as fs from "fs";
 import { type } from "os";
 import { off } from "process";
+import { f } from "../../192/192c/192c";
 
 const DEBUG = false;
 const DO_MAIN = false;
@@ -95,10 +96,15 @@ export class Me {
     this._money = money;
   }
 
+  hasMoney(): boolean {
+    return this._money > 0;
+  }
+
   move(): boolean {
     if (this._money <= 0) return false;
     this._village += this._money;
     this._money = 0;
+    console.debug(`me.move village:${this.village}`);
     return true;
   }
 
@@ -129,15 +135,23 @@ function readFriends(lines: string[]) {
 
 export function solve(K: number, friends: Friend[]): number {
   const me = new Me(K);
+  // 破壊的ソート！
   friends.sort((a, b) => {
     return a.village - b.village;
   });
 
-  for (const friend of friends) {
-    me.move();
-    if (me.getMoneyFromFriend(friend)) continue;
-  }
+  // 初回進む
+  me.move();
 
+  for (let i = 0; i < friends.length; i++) {
+    assert(!me.hasMoney());
+    const f = friends[i];
+    const getMoneySuccess = me.getMoneyFromFriend(f);
+    if (!getMoneySuccess) break;
+    // お金が得られたら移動する
+    me.move();
+  }
+  // me.move();
   return me.village;
 }
 
