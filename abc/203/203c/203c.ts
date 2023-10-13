@@ -1,8 +1,5 @@
 import { assert } from "console";
 import * as fs from "fs";
-import { type } from "os";
-import { off } from "process";
-import { f } from "../../192/192c/192c";
 
 const DEBUG = false;
 const DO_MAIN = false;
@@ -121,13 +118,13 @@ export class Me {
   }
 }
 
-function readFriends(lines: string[]) {
+export function readFriends(lines: string[]) {
   let friends = initFriends();
 
   //友達情報読み込み
   for (const line of lines) {
     if (line.length <= 0) break;
-    const [A, B] = line.split("").map(Number);
+    const [A, B] = line.split(" ").map(Number);
     friends = addFriend(friends, A, B);
   }
   return friends;
@@ -157,9 +154,12 @@ export function solve(K: number, friends: Friend[]): number {
 
 if (DO_MAIN) {
   const [line0, ...lines] = readInputs();
-  const [N, K] = line0.split("").map(Number);
-
+  const [N, K] = line0.split(" ").map(Number);
+  console.debug(`N:${N} K:${K}`);
+  console.debug("line0:", line0);
+  console.debug("lines:", lines);
   const friends = readFriends(lines);
+  console.debug("friends:", friends);
   const ans = solve(K, friends);
 
   console.log(ans);

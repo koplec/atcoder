@@ -1,5 +1,38 @@
 import { describe, test, expect } from "@jest/globals";
-import { solve, Friend, Me } from "./203c";
+import { solve, Friend, Me, readFriends } from "./203c";
+
+describe("readFriends", () => {
+  test("sample1", () => {
+    expect(readFriends(["2 1", "5 10"])).toEqual([
+      { village: 2, money: 1 },
+      { village: 5, money: 10 },
+    ]);
+  });
+  test("sample2", () => {
+    expect(
+      readFriends([
+        "1 1000000000",
+        "2 1000000000",
+        "3 1000000000",
+        "4 1000000000",
+        "5 1000000000",
+      ])
+    ).toEqual([
+      { village: 1, money: 1000000000 },
+      { village: 2, money: 1000000000 },
+      { village: 3, money: 1000000000 },
+      { village: 4, money: 1000000000 },
+      { village: 5, money: 1000000000 },
+    ]);
+  });
+  test("sample3", () => {
+    expect(readFriends(["5 5", "2 1", "2 2"])).toEqual([
+      { village: 5, money: 5 },
+      { village: 2, money: 1 },
+      { village: 2, money: 2 },
+    ]);
+  });
+});
 describe("Me", () => {
   test("move", () => {
     const me = new Me(10);
