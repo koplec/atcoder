@@ -84,6 +84,22 @@ export function lcm(x: number, y: number): number {
   return (x * y) / gcd(x, y);
 }
 
+export function solve(
+  maxAlcoholPer: number,
+  vs: number[],
+  ps: number[]
+): number {
+  const length = vs.length;
+  let currAlcohol = 0;
+  for (let i = 0; i < length; i++) {
+    currAlcohol += vs[i] * ps[i];
+    if (currAlcohol > 100 * maxAlcoholPer) {
+      return i;
+    }
+  }
+  return -1;
+}
+
 if (DO_MAIN) {
   let alcohol = 0;
   const [line0, ...lines] = readInputs();
