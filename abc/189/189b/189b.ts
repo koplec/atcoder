@@ -84,16 +84,27 @@ export function lcm(x: number, y: number): number {
   return (x * y) / gcd(x, y);
 }
 
+/**
+ * 高橋君がアルコールを摂取して、酔っぱらうかどうか
+ *
+ * @param maxAlcoholML 最大アルコール摂取量(ml)
+ * @param vs お酒の容量（ml)
+ * @param ps 対応するお酒のアルコール度数(%)
+ * @returns 何番目のお酒で最大アルコール許容量を超えるか？　超えないときは-1を出力
+ */
 export function solve(
-  maxAlcoholPer: number,
+  maxAlcoholML: number,
   vs: number[],
   ps: number[]
 ): number {
   const length = vs.length;
-  let currAlcohol = 0;
+
+  //現在のアルコール摂取量の100倍 percent計算で小数による誤差をなくすため
+  let currAlcohol_x_100 = 0;
+
   for (let i = 0; i < length; i++) {
-    currAlcohol += vs[i] * ps[i];
-    if (currAlcohol > 100 * maxAlcoholPer) {
+    currAlcohol_x_100 += vs[i] * ps[i];
+    if (currAlcohol_x_100 > 100 * maxAlcoholML) {
       return i;
     }
   }
@@ -101,18 +112,21 @@ export function solve(
 }
 
 if (DO_MAIN) {
-  let alcohol = 0;
   const [line0, ...lines] = readInputs();
 
   const [N, X] = line0.split(" ").map(Number);
+  const VAry: number[] = [];
+  const PAry: number[] = [];
   for (let i = 0; i < N; i++) {
     const [V, P] = lines[i].split(" ").map(Number);
-    alcohol += V * P;
-    if (alcohol > 100 * X) {
-      console.log(i + 1);
-      process.exit(0);
-    }
+    VAry[i] = V;
+    PAry[i] = P;
   }
 
-  console.log(-1);
+  const ans = solve(X, VAry, PAry);
+  if (ans >= 0) {
+    console.log(ans + 1);
+  } else {
+    console.log(ans);
+  }
 }
