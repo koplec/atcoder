@@ -85,30 +85,51 @@ export function lcm(x: number, y: number): number {
 }
 
 /**
+ *
+ *
+ * @param begin loopの開始する番号
+ * @param end loopの終了する番号+1の値
+ * @param count
+ * @param accumAry
+ * @returns
+ */
+function* _genCombLoop(
+  begin: number,
+  end: number,
+  count: number,
+  accumAry: number[]
+) {
+  if (count === 0) {
+    for (let index = begin; index < end; index++) {
+      let ret = [...accumAry];
+      ret.push(index);
+      yield ret;
+    }
+    return;
+  }
+
+  // count >== 1
+  for (let i = begin; i < end - count; i++) {
+    const ret = [i, ...accumAry]; //[0]
+    //   TODO: anyの型検討
+    const iter: any = _genCombLoop(i + 1, end, count - 1, ret);
+    let v: IteratorResult<number[], void>;
+    for (let i = 0; i < 10; i++) {
+      v = iter.next();
+      if (v.done) break;
+      if (!v.done) yield v.value;
+    }
+  }
+}
+
+/**
  * combinationを生成するgenerator
  *
  */
 export function* genComb(N: number, K: number) {
-  function* loop(begin: number, N: number, count: number, accumAry: number[]) {
-    if (count === 0) {
-      for (let index = begin; index < N; index++) {
-        let ret = [...accumAry];
-        ret.push(index);
-        yield ret;
-      }
-      return;
-    }
-
-    // count >== 1
-    for (let i = begin; i < N - count; i++) {
-      accumAry.push(i);
-      const iter = loop(i + 1, N, count + 1, accumAry);
-      let v = iter.next();
-      if (!v.done) yield accumAry;
-    }
-  }
   if (K === 1) {
-    const iter = loop(0, N, 0, []);
+    // 0-N-1のgen
+    const iter = _genCombLoop(0, N, K - 1, []);
     let v: IteratorResult<number[], void>;
     while (true) {
       v = iter.next();
@@ -118,10 +139,12 @@ export function* genComb(N: number, K: number) {
   }
 
   if (K === 2) {
-    for (let i = 0; i < N - 1; i++) {
-      for (let j = i + 1; j < N; j++) {
-        yield [i, j];
-      }
+    const iter = _genCombLoop(0, N, K - 1, []);
+    let v: IteratorResult<number[], void>;
+    while (true) {
+      v = iter.next();
+      if (v.done) break;
+      yield v.value;
     }
   }
   if (K === 3) {
