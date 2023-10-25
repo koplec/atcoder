@@ -89,11 +89,34 @@ export function lcm(x: number, y: number): number {
  *
  */
 export function* genComb(N: number, K: number) {
-  if (K === 1) {
-    for (let i = 0; i < N; i++) {
-      yield [i];
+  function* loop(begin: number, N: number, count: number, accumAry: number[]) {
+    if (count === 0) {
+      for (let index = begin; index < N; index++) {
+        let ret = [...accumAry];
+        ret.push(index);
+        yield ret;
+      }
+      return;
+    }
+
+    // count >== 1
+    for (let i = begin; i < N - count; i++) {
+      accumAry.push(i);
+      const iter = loop(i + 1, N, count + 1, accumAry);
+      let v = iter.next();
+      if (!v.done) yield accumAry;
     }
   }
+  if (K === 1) {
+    const iter = loop(0, N, 0, []);
+    let v: IteratorResult<number[], void>;
+    while (true) {
+      v = iter.next();
+      if (v.done) break;
+      yield v.value;
+    }
+  }
+
   if (K === 2) {
     for (let i = 0; i < N - 1; i++) {
       for (let j = i + 1; j < N; j++) {
