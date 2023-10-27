@@ -1,7 +1,7 @@
 import { assert } from "console";
 import * as fs from "fs";
 
-const DEBUG = false;
+const DEBUG = true;
 const DO_MAIN = false;
 if (!DEBUG) {
   console.debug = () => {};
@@ -84,6 +84,54 @@ export function lcm(x: number, y: number): number {
   return (x * y) / gcd(x, y);
 }
 
+export type CombBit = number;
+// https://nemutage.hatenablog.jp/entry/2023/05/04/021435
+// このアルゴリズムは、桁数の制約がある
+// 32bit整数で表すので、Nはせいぜい32程度まで　それ以上の組み合わせの生成には32bit整数ではだめ
+export function* genCombBits(
+  N: number,
+  K: number
+): Generator<CombBit, any, any> {
+  // N桁で下K桁が1で埋まっているBit列の生成 0b000.00111..11みたいな
+  let ret = 0;
+
+  for (let i = 0; i < K; i++) {
+    ret = (ret << 1) | 1;
+  }
+
+  yield ret;
+
+  for (;;) {
+    const least = ret & -ret;
+    const left = ret + least;
+    const right = ((ret & ~left) / least) >> 1;
+    ret = left | right;
+
+    //N桁目で終了してほしい
+    if (((1 << N) & ret) > 0) break;
+    yield ret;
+  }
+}
+
+/**
+ * 組み合わせ(combination)を表すcomBitから、何番目の要素が含まれるかを表す配列を返す
+ * 例
+ * 0b00101 -> [0, 2]
+ * 0b11111 -> [0,1,2,3,4]
+ *
+ * @param combBit
+ * @returns
+ */
+export function combBit2IndexArray(combBit: CombBit): number[] {
+  let ret: number[] = [];
+  for (let index = 0; ; index++) {
+    const t = 1 << index;
+    if (t < 0) break;
+    if (combBit & t) ret.push(index);
+  }
+  return ret;
+}
+
 /**
  *
  *
@@ -111,10 +159,11 @@ function* _genCombLoop(
   // count >== 1
   for (let i = begin; i < end - count; i++) {
     const ret = [i, ...accumAry]; //[0]
+    console.debug("count:", count, " i:", i, " ret:", ret);
     //   TODO: anyの型検討
     const iter: any = _genCombLoop(i + 1, end, count - 1, ret);
     let v: IteratorResult<number[], void>;
-    for (let i = 0; i < 10; i++) {
+    for (let _i_ = 0; _i_ < 10; _i_++) {
       v = iter.next();
       if (v.done) break;
       if (!v.done) yield v.value;
@@ -148,12 +197,19 @@ export function* genComb(N: number, K: number) {
     }
   }
   if (K === 3) {
-    for (let i = 0; i < N - 2; i++) {
-      for (let j = i + 1; j < N - 1; j++) {
-        for (let k = j + 1; k < N; k++) {
-          yield [i, j, k];
-        }
-      }
+    const iter = _genCombLoop(0, N, K - 1, []);
+    let v: IteratorResult<number[], void>;
+    while (true) {
+      v = iter.next();
+      if (v.done) break;
+      yield v.value;
     }
+    // for (let i = 0; i < N - 2; i++) {
+    //   for (let j = i + 1; j < N - 1; j++) {
+    //     for (let k = j + 1; k < N; k++) {
+    //       yield [i, j, k];
+    //     }
+    //   }
+    // }
   }
 }
