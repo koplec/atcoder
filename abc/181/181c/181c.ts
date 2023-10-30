@@ -1,8 +1,9 @@
 import { assert } from "console";
 import * as fs from "fs";
+import { exit } from "process";
 
-const DEBUG = true;
-const DO_MAIN = false;
+const DEBUG = false;
+const DO_MAIN = true;
 if (!DEBUG) {
   console.debug = () => {};
 }
@@ -87,7 +88,8 @@ export function lcm(x: number, y: number): number {
 export type CombBit = number;
 // https://nemutage.hatenablog.jp/entry/2023/05/04/021435
 // このアルゴリズムは、桁数の制約がある
-// 32bit整数で表すので、Nはせいぜい32程度まで　それ以上の組み合わせの生成には32bit整数ではだめ
+// 32bit整数で表すので、Nはせいぜい32程度まで
+// それ以上の組み合わせの生成には32bit整数ではだめ
 export function* genCombBits(
   N: number,
   K: number
@@ -133,83 +135,48 @@ export function combBit2IndexArray(combBit: CombBit): number[] {
 }
 
 /**
+ * combinationを生成するgenerator
  *
- *
- * @param begin loopの開始する番号
- * @param end loopの終了する番号+1の値
- * @param count
- * @param accumAry
- * @returns
  */
-function* _genCombLoop(
-  begin: number,
-  end: number,
-  count: number,
-  accumAry: number[]
-) {
-  if (count === 0) {
-    for (let index = begin; index < end; index++) {
-      let ret = [...accumAry];
-      ret.push(index);
-      yield ret;
-    }
-    return;
-  }
-
-  // count >== 1
-  for (let i = begin; i < end - count; i++) {
-    const ret = [i, ...accumAry]; //[0]
-    console.debug("count:", count, " i:", i, " ret:", ret);
-    //   TODO: anyの型検討
-    const iter: any = _genCombLoop(i + 1, end, count - 1, ret);
-    let v: IteratorResult<number[], void>;
-    for (let _i_ = 0; _i_ < 10; _i_++) {
-      v = iter.next();
-      if (v.done) break;
-      if (!v.done) yield v.value;
+export function* genComb3(N: number) {
+  for (let i = 0; i < N - 2; i++) {
+    for (let j = i + 1; j < N - 1; j++) {
+      for (let k = j + 1; k < N; k++) {
+        yield [i, j, k];
+      }
     }
   }
 }
 
-/**
- * combinationを生成するgenerator
- *
- */
-export function* genComb(N: number, K: number) {
-  if (K === 1) {
-    // 0-N-1のgen
-    const iter = _genCombLoop(0, N, K - 1, []);
-    let v: IteratorResult<number[], void>;
-    while (true) {
-      v = iter.next();
-      if (v.done) break;
-      yield v.value;
+type Point = [number, number];
+function isCollinearity(p1: Point, p2: Point, p3: Point): boolean {
+  const [x1, y1] = p1;
+  const [x2, y2] = p2;
+  const [x3, y3] = p3;
+  return (x2 - x1) * (y3 - y1) == (y2 - y1) * (x3 - x1);
+}
+
+if (DO_MAIN) {
+  const [first, ...lines] = readInputs();
+  const N: number = Number(first);
+  const inputPoints = lines
+    .filter((line) => line.length > 0)
+    .map((line) => line.split(" ").map((str) => Number(str))) as Point[];
+  // console.debug(points);
+
+  const iter = genComb3(N);
+  for (let v = iter.next(); !v.done; v = iter.next()) {
+    // console.debug(v.value);
+    // TODO: void | number[]になってしまって、mapがtscを通らないので、一旦asで逃げる
+    // 論理的には、!v.doneでvoidが返らないようになっていると思うんだけど。。。
+    const indexes = v.value as number[];
+    const ps: Point[] = indexes.map((index) => inputPoints[index]);
+    // console.debug(ps);
+    if (isCollinearity(ps[0], ps[1], ps[2])) {
+      console.log("Yes");
+      exit();
     }
   }
 
-  if (K === 2) {
-    const iter = _genCombLoop(0, N, K - 1, []);
-    let v: IteratorResult<number[], void>;
-    while (true) {
-      v = iter.next();
-      if (v.done) break;
-      yield v.value;
-    }
-  }
-  if (K === 3) {
-    const iter = _genCombLoop(0, N, K - 1, []);
-    let v: IteratorResult<number[], void>;
-    while (true) {
-      v = iter.next();
-      if (v.done) break;
-      yield v.value;
-    }
-    // for (let i = 0; i < N - 2; i++) {
-    //   for (let j = i + 1; j < N - 1; j++) {
-    //     for (let k = j + 1; k < N; k++) {
-    //       yield [i, j, k];
-    //     }
-    //   }
-    // }
-  }
+  console.log("No");
 }
