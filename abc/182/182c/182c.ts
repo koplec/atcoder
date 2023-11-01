@@ -156,13 +156,13 @@ export function* genComb3(N: number) {
  * 消しても3の倍数にならないときは-1を返す
  * @param N 入力される正の整数
  */
-export function solve(N: number): number {
+export function solve(N: bigint): number {
   assert(N > 0, "argument must be positive!!");
-  const rem = N % 3;
+  const rem = N % 3n;
   let hasRem1 = false; //余りが1になる桁がある
   let hasRem2 = false; //余りが2になる桁がある
 
-  if (rem === 0) return 0; //3の倍数だったら、1つも消す必要はない
+  if (rem === 0n) return 0; //3の倍数だったら、1つも消す必要はない
   const str = String(N);
   const digit = str.length;
   for (const s of str) {
@@ -173,7 +173,7 @@ export function solve(N: number): number {
   }
 
   //理論ノート参照
-  if (rem === 1) {
+  if (rem === 1n) {
     if (hasRem1) {
       if (digit <= 1) return -1;
       return 1;
@@ -183,7 +183,7 @@ export function solve(N: number): number {
       return 2;
     }
   } else {
-    assert(rem === 2);
+    assert(rem === 2n);
     if (hasRem2) {
       if (digit <= 1) return -1;
       return 1;
@@ -197,6 +197,6 @@ export function solve(N: number): number {
 
 if (DO_MAIN) {
   const [line, ..._rem] = readInputs();
-  const ans = solve(Number(line));
+  const ans = solve(BigInt(line));
   console.log(ans);
 }
