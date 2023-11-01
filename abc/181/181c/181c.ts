@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { exit } from "process";
 
 const DEBUG = false;
-const DO_MAIN = true;
+const DO_MAIN = false;
 if (!DEBUG) {
   console.debug = () => {};
 }
